@@ -1,0 +1,31 @@
+# All files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Shell scripts
+[*.sh]
+indent_style = space
+indent_size = 4
+
+# Go files
+[*.go]
+indent_style = tab
+indent_size = 4
+trim_trailing_whitespace = true
+
+# YAML files
+[*.yml]
+indent_style = space
+indent_size = 2
+
+[*.yaml]
+indent_style = space
+indent_size = 2
+
+# Dockerfiles
+[Dockerfile*]
+indent_style = space
+indent_size = 4

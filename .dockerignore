@@ -1,0 +1,22 @@
+# Exclude vendor directory and dependency files
+/vendor/
+/Gopkg.lock
+/go.sum
+
+# Exclude test files
+*.test
+*.out
+*.cover
+
+# Exclude local configuration files
+*.local
+
+# Exclude IDE/editor specific files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Exclude operating system files
+.DS_Store
+Thumbs.db

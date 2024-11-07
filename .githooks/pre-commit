@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Fail on any error
+set -e
+
+# Run go vet to check for potential issues
+echo "Running go vet..."
+go vet ./...
+if [ $? -ne 0 ]; then
+    echo "go vet found issues. Please fix them."
+    exit 1
+fi
+
+# Validate YAML files
+echo "Validating goreleaser config..."
+if ! goreleaser check ; then
+    echo "goreleaser validation failed. Please fix the issues before committing."
+    exit 1
+fi
+
+echo "All checks passed. Ready to commit!"
