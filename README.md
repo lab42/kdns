@@ -32,7 +32,7 @@
 
 kdns is a lightweight mDNS (Multicast DNS) server for Kubernetes that exposes services on the local network using DNS names with `.local` extensions. This service helps manage local DNS resolution in Kubernetes environments, facilitating service discovery for containers without the need for a full DNS solution.
 
-<h2 align="center">Features<h2/>
+<h2 align="center">Features</h2>
 
 - **mDNS Server**: Exposes services over mDNS using `.local` DNS names.
 - **Kubernetes Integration**: Works natively within Kubernetes environments.
@@ -40,13 +40,13 @@ kdns is a lightweight mDNS (Multicast DNS) server for Kubernetes that exposes se
 - **Security**: Runs with minimal privileges for enhanced security.
 - **Helm Chart**: Deployable via Helm for easy integration into your Kubernetes clusters.
 
-<h3 align="center">Prerequisites<h3/>
+<h3 align="center">Prerequisites</h3>
 
 - Kubernetes Cluster
 - Helm (v3.8.0 or higher recommended)
 - A running Kubernetes environment (local only)
 
-<h3 align="center">Install using Helm<h3/>
+<h3 align="center">Install using Helm</h3>
 
 To install `kdns` in your Kubernetes cluster, follow these steps:
 
@@ -65,7 +65,7 @@ helm install kdns lab42/kdns
 
 This will install the `kdns` service with default settings in your Kubernetes cluster.
 
-<h3 align="center">Configuration<h3/>
+<h3 align="center">Configuration</h3>
 
 You can customize the installation by overriding values in your `values.yaml`. For example:
 
@@ -83,17 +83,17 @@ To configure the `kdns` chart with your custom values, create a `values.yaml` fi
 helm install kdns lab42/kdns -f values.yaml
 ```
 
-<h2 align="center">Usage<h2/>
+<h2 align="center">Usage</h2>
 
 Once `kdns` is installed, it will expose services on the local network using mDNS. For example, if you have a service named `my-service`, it will be available under `my-service.local`.
 
-<h3 align="center">Example<h3/>
+<h3 align="center">Example</h3>
 
 - Deploy a service in your Kubernetes cluster (e.g., an HTTP server running in a pod).
 - The `kdns` server will automatically expose this service on the local network.
 - Access it using the `.local` domain name, like `http://my-service.local`.
 
-<h2 align="center">Helm Chart Customization<h2/>
+<h2 align="center">Helm Chart Customization</h2>
 
 For a full list of configurable parameters, check the [Helm Chart values](https://github.com/lab42/charts/blob/main/charts/kdns/values.yaml).
 
