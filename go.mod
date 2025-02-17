@@ -5,7 +5,7 @@ go 1.23.2
 require (
 	github.com/hashicorp/mdns v1.0.6
 	github.com/miekg/dns v1.1.63
-	github.com/spf13/cobra v1.9.0
+	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.19.0
 	k8s.io/api v0.32.2
 	k8s.io/client-go v0.32.2
