@@ -1,7 +1,6 @@
 # Exclude vendor directory and dependency files
 /vendor/
 /Gopkg.lock
-/go.sum
 
 # Exclude test files
 *.test

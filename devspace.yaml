@@ -1,0 +1,130 @@
+version: v2beta1
+name: kdns
+images:
+  kdns:
+    image: kdns
+    createPullSecret: false
+    dockerfile: ./Dockerfile.dev
+    context: .
+dev:
+  kdns:
+    imageSelector: kdns
+    sync:
+      - path: ./:/app # Sync local files -> container
+        waitInitialSync: true
+    terminal:
+      command: "air"
+hooks:
+  - name: "mod-tidy"
+    command: "go mod tidy"
+    events: ["before:build"]
+deployments:
+  kdns:
+    kubectl:
+      inlineManifest: |-
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: kdns
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: kdns
+          template:
+            metadata:
+              labels:
+                app: kdns
+            spec:
+              hostNetwork: true
+              dnsPolicy: ClusterFirstWithHostNet
+              containers:
+              - name: kdns
+                image: kdns
+                securityContext:
+                  capabilities:
+                    add:
+                      - NET_ADMIN
+                      - NET_RAW
+        ---
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: httpbin
+          labels:
+            app: httpbin
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: httpbin
+          template:
+            metadata:
+              labels:
+                app: httpbin
+            spec:
+              containers:
+                - name: httpbin
+                  image: kennethreitz/httpbin
+                  ports:
+                    - containerPort: 80
+        ---
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: httpbin
+        spec:
+          selector:
+            app: httpbin
+          ports:
+            - protocol: TCP
+              port: 80
+              targetPort: 80
+          type: ClusterIP  # Internal service
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: Ingress
+        metadata:
+          name: httpbin
+          annotations:
+            lab42.io/mdns.enabled: "true"
+            lab42.io/mdns.name: httpbin
+            lab42.io/mdns.host: httpbin
+        spec:
+          ingressClassName: traefik
+          rules:
+            - host: httpbin.local
+              http:
+                paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: httpbin
+                        port:
+                          number: 80
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRole
+        metadata:
+          name: ingress-reader-cluster
+        rules:
+          - apiGroups: ["networking.k8s.io"]
+            resources: ["ingresses"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: [""]
+            resources: ["services"]
+            verbs: ["get", "list", "watch"]
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRoleBinding
+        metadata:
+          name: ingress-reader-cluster-binding
+        subjects:
+          - kind: ServiceAccount
+            name: default
+            namespace: default
+        roleRef:
+          kind: ClusterRole
+          name: ingress-reader-cluster
+          apiGroup: rbac.authorization.k8s.io

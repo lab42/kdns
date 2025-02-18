@@ -4,12 +4,15 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/brutella/dnssd"
+	"github.com/lab42/kdns/handler"
 	"github.com/lab42/kdns/mdns"
 	"github.com/lab42/kdns/watcher"
 	"github.com/spf13/cobra"
@@ -27,35 +30,39 @@ var rootCmd = &cobra.Command{
 		sigChan := make(chan os.Signal, 1)
 		signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
-		mDNS, err := mdns.NewMDNSServer()
+		mDNSManager, err := mdns.NewManager()
 		if err != nil {
 			return err
 		}
 
+		mDNSManager.Upsert(dnssd.Config{
+			Name:   "k3s", // This will be the hostname
+			Host:   "k3s",
+			Type:   "_ssh._tcp",
+			Domain: "local",
+			Port:   22,
+		})
+
+		ingressHandler := handler.NewIngressHandler(&mDNSManager)
+		serviceHandler := handler.NewServiceHandler(&mDNSManager)
+
 		// Create the Kubernetes watcher
-		watcher, err := watcher.NewK8sWatcher(mDNS)
+		watcher, err := watcher.NewK8sWatcher(ingressHandler, serviceHandler)
 		if err != nil {
 			return err
 		}
 
 		// Start watching for events
 		go watcher.Run()
-
-		if err := mDNS.Start(); err != nil {
-			return err
-		}
+		go mDNSManager.Respond(context.Background())
 
 		// Wait for a termination signal
 		<-sigChan
 
 		// Gracefully shutdown all services
 		log.Println("shutting down ingress watcher...")
-		mDNS.Stop()
+		watcher.Stop()
 		log.Println("ingress watcher stopped.")
-
-		log.Println("shutting down mDNS server...")
-		mDNS.Stop()
-		log.Println("mDNS server stopped.")
 
 		return err
 	},
