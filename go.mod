@@ -5,7 +5,7 @@ go 1.23.2
 require (
 	github.com/brutella/dnssd v1.2.14
 	github.com/spf13/cobra v1.9.1
-	github.com/spf13/viper v1.20.0
+	github.com/spf13/viper v1.20.1
 	k8s.io/api v0.32.3
 	k8s.io/client-go v0.32.3
 )
