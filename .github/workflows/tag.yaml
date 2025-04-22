@@ -33,7 +33,7 @@ jobs:
       - name: "[Setup] Syft"
         uses: anchore/sbom-action/download-syft@v0.18.0
       - name: "[Setup] Cosign"
-        uses: sigstore/cosign-installer@v3.8.1
+        uses: sigstore/cosign-installer@v3.8.2
       - name: "[Setup] Cosign key"
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
