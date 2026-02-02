@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "[Setup] repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: "[CI] GoReleaser"
         uses: goreleaser/goreleaser-action@v6
         with:
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "[Setup] repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: "[CI] Validate Dockerfile"
         uses: hadolint/hadolint-action@v3.3.0
         with:
