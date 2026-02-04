@@ -31,7 +31,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.TOKEN }}
       - name: "[Setup] Syft"
-        uses: anchore/sbom-action/download-syft@v0.22.1
+        uses: anchore/sbom-action/download-syft@v0.22.2
       - name: "[Setup] Cosign"
         uses: sigstore/cosign-installer@v3.10.1
       - name: "[Setup] Cosign key"
