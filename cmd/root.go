@@ -47,7 +47,7 @@ var rootCmd = &cobra.Command{
 		serviceHandler := handler.NewServiceHandler(&mDNSManager)
 
 		// Create the Kubernetes watcher
-		watcher, err := watcher.NewK8sWatcher(ingressHandler, serviceHandler)
+		watcher, err := watcher.NewK8sWatcher(ingressHandler, serviceHandler, &mDNSManager)
 		if err != nil {
 			return err
 		}

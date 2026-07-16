@@ -93,6 +93,40 @@ Once `kdns` is installed, it will expose services on the local network using mDN
 - The `kdns` server will automatically expose this service on the local network.
 - Access it using the `.local` domain name, like `http://my-service.local`.
 
+### Gateway API
+
+`kdns` can publish hostnames from accepted Gateway API `HTTPRoute` resources.
+The route must opt in explicitly:
+
+```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: dashboard
+  annotations:
+    lab42.io/mdns.enabled: "true"
+spec:
+  parentRefs:
+    - name: main
+      sectionName: https
+  hostnames:
+    - dashboard.example.local
+```
+
+The referenced `Gateway` must expose an IP address in
+`status.addresses`, and the matching route parent must report
+`Accepted=True`. The Gateway listener supplies the advertised port and service
+type. Only hostnames in the configured mDNS domain (`local` by default) are
+published.
+
+The kdns service account needs read access to Gateway API resources:
+
+```yaml
+- apiGroups: ["gateway.networking.k8s.io"]
+  resources: ["gateways", "httproutes"]
+  verbs: ["get", "list", "watch"]
+```
+
 <h2 align="center">Helm Chart Customization</h2>
 
 For a full list of configurable parameters, check the [Helm Chart values](https://github.com/lab42/charts/blob/main/charts/kdns/values.yaml).
