@@ -14,7 +14,7 @@ jobs:
       - name: "[Setup] repository"
         uses: actions/checkout@v4
       - name: "[CI] GoReleaser"
-        uses: goreleaser/goreleaser-action@v6
+        uses: goreleaser/goreleaser-action@v7
         with:
           args: check
   validate-title:
